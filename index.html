@@ -22,14 +22,14 @@
     /* JC1: teal/cyan */
     --j1: #00c9b1;
     --j1-dim: #00796b;
-    --j1-bg: rgba(0,201,177,0.2);
-    --j1-border: rgba(0,201,177,0.6);
+    --j1-bg: #0d3330;
+    --j1-border: #1a6b62;
 
     /* JC2: amber/orange */
     --j2: #ff8c42;
     --j2-dim: #b85c1a;
-    --j2-bg: rgba(255,140,66,0.2);
-    --j2-border: rgba(255,140,66,0.6);
+    --j2-bg: #2e1a0a;
+    --j2-border: #7a4020;
 
     --green: #4caf7d;
     --green-bg: rgba(76,175,125,0.1);
@@ -106,9 +106,9 @@
   .lesson-card { border-radius: 10px; overflow: hidden; border: 1px solid; transition: box-shadow 0.15s, border-color 0.15s; }
   .lesson-card.j1 { background: var(--surface); border-color: var(--j1-border); }
   .lesson-card.j2 { background: var(--surface); border-color: var(--j2-border); }
-  .lesson-card.j1:hover { border-color: var(--j1); box-shadow: 0 0 0 1px var(--j1-border), 0 4px 20px rgba(0,201,177,0.1); }
-  .lesson-card.j2:hover { border-color: var(--j2); box-shadow: 0 0 0 1px var(--j2-border), 0 4px 20px rgba(255,140,66,0.1); }
-  .lesson-card.done { opacity: 0.5; }
+  .lesson-card.j1:hover { border-color: var(--j1); box-shadow: 0 4px 20px rgba(0,201,177,0.15); }
+  .lesson-card.j2:hover { border-color: var(--j2); box-shadow: 0 4px 20px rgba(255,140,66,0.15); }
+  .lesson-card.done { opacity: 1; }
 
   .lesson-header { display: flex; align-items: center; padding: 0.8rem 1rem; gap: 0.8rem; cursor: pointer; user-select: none; }
   .lesson-card.j1 .lesson-header { background: var(--j1-bg); }
