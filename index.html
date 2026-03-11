@@ -8,9 +8,15 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --ink: #1a1a2e; --paper: #f5f2eb; --cream: #ede9df; --accent: #c84b31;
-    --gold: #d4a853; --muted: #7a7468; --border: #d6d0c4; --white: #ffffff;
+    --ink: #1a1a2e; --paper: #f5f2eb; --cream: #ede9df;
+    --muted: #7a7468; --border: #d6d0c4; --white: #ffffff;
+    --gold: #d4a853;
     --green: #2d6a4f; --green-light: #e8f4f0;
+    /* JC1: warm teal */
+    --j1: #0e6b72; --j1-light: #e0f4f5; --j1-badge: #0e6b72; --j1-border: #9dd4d8;
+    /* JC2: warm amber/rust */
+    --j2: #9b3a10; --j2-light: #fdf0ea; --j2-badge: #c84b31; --j2-border: #f0b89a;
+    --accent: #c84b31;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
@@ -25,93 +31,140 @@
   .logo span { color: var(--gold); }
   .header-meta { font-size: 0.78rem; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
 
-  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
-  .term-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* TERM BAR */
+  .term-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .term-bar h1 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; flex: 1; }
   .term-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
   .term-tab { padding: 0.4rem 1rem; border: 1.5px solid var(--border); background: transparent; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--muted); transition: all 0.15s; }
   .term-tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .term-tab:hover:not(.active) { border-color: var(--ink); color: var(--ink); }
-  .btn-add-lesson { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.2rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
-  .btn-add-lesson:hover { opacity: 0.85; }
 
-  .term-progress { background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
-  .progress-stat { text-align: center; }
-  .progress-stat .num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--ink); line-height: 1; }
-  .progress-stat .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
-  .progress-bar-wrap { flex: 1; min-width: 200px; }
-  .progress-bar-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; display: flex; justify-content: space-between; }
-  .progress-bar-bg { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.4s ease; }
+  .add-row { display: flex; gap: 0.6rem; margin-bottom: 2rem; }
+  .btn-add { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.2rem; color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
+  .btn-add:hover { opacity: 0.85; }
+  .btn-add.j1 { background: var(--j1); }
+  .btn-add.j2 { background: var(--j2-badge); }
 
-  .lessons-list { display: flex; flex-direction: column; gap: 0.8rem; }
-  .lesson-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; transition: box-shadow 0.15s; }
-  .lesson-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
-  .lesson-card.done { opacity: 0.65; }
-  .lesson-header { display: flex; align-items: center; padding: 1rem 1.2rem; gap: 1rem; cursor: pointer; user-select: none; }
-  .week-badge { background: var(--ink); color: var(--paper); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 4px; white-space: nowrap; min-width: 52px; text-align: center; }
-  .lesson-card.done .week-badge { background: var(--green); }
-  .lesson-title-area { flex: 1; }
-  .lesson-title { font-weight: 600; font-size: 0.95rem; color: var(--ink); }
-  .lesson-meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
-  .lesson-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-  .chip { font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 12px; font-weight: 500; }
+  /* PROGRESS */
+  .progress-row { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .progress-box { flex: 1; min-width: 200px; border-radius: 10px; padding: 1rem 1.2rem; border: 1.5px solid; }
+  .progress-box.j1 { background: var(--j1-light); border-color: var(--j1-border); }
+  .progress-box.j2 { background: var(--j2-light); border-color: var(--j2-border); }
+  .pb-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.6rem; }
+  .progress-box.j1 .pb-title { color: var(--j1); }
+  .progress-box.j2 .pb-title { color: var(--j2-badge); }
+  .pb-stats { display: flex; gap: 1.5rem; align-items: center; }
+  .pb-stat .num { font-family: 'DM Serif Display', serif; font-size: 1.6rem; line-height: 1; color: var(--ink); }
+  .pb-stat .lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .pb-bar-wrap { flex: 1; }
+  .pb-bar-bg { height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 0.3rem; }
+  .progress-box.j1 .pb-bar-fill { height: 100%; background: var(--j1); border-radius: 4px; transition: width 0.4s ease; }
+  .progress-box.j2 .pb-bar-fill { height: 100%; background: var(--j2-badge); border-radius: 4px; transition: width 0.4s ease; }
+
+  /* WEEK LAYOUT */
+  .week-section { margin-bottom: 2rem; }
+  .week-label { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--muted); margin-bottom: 0.7rem; padding-bottom: 0.4rem; border-bottom: 1.5px solid var(--border); display: flex; align-items: center; gap: 0.6rem; }
+  .week-label span { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: var(--muted); font-weight: 400; }
+
+  .week-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 700px) { .week-columns { grid-template-columns: 1fr; } }
+
+  .week-col { display: flex; flex-direction: column; gap: 0.6rem; }
+  .col-header { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 4px; display: inline-block; margin-bottom: 0.2rem; }
+  .col-header.j1 { background: var(--j1-light); color: var(--j1); }
+  .col-header.j2 { background: var(--j2-light); color: var(--j2-badge); }
+
+  /* LESSON CARD */
+  .lesson-card { border-radius: 10px; overflow: hidden; transition: box-shadow 0.15s; border: 1.5px solid; }
+  .lesson-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
+  .lesson-card.j1 { background: var(--white); border-color: var(--j1-border); }
+  .lesson-card.j2 { background: var(--white); border-color: var(--j2-border); }
+  .lesson-card.done { opacity: 0.6; }
+
+  .lesson-header { display: flex; align-items: center; padding: 0.85rem 1rem; gap: 0.8rem; cursor: pointer; user-select: none; }
+  .lesson-card.j1 .lesson-header { background: var(--j1-light); }
+  .lesson-card.j2 .lesson-header { background: var(--j2-light); }
+
+  .level-badge { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 4px; white-space: nowrap; color: white; }
+  .lesson-card.j1 .level-badge { background: var(--j1); }
+  .lesson-card.j2 .level-badge { background: var(--j2-badge); }
+  .lesson-card.done .level-badge { background: var(--green) !important; }
+
+  .lesson-title-area { flex: 1; min-width: 0; }
+  .lesson-title { font-weight: 600; font-size: 0.9rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lesson-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+
+  .lesson-chips { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .chip { font-size: 0.68rem; padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 500; }
   .chip-hw { background: #fef3e2; color: #9a6310; }
   .chip-followup { background: #fde8e8; color: #9b2020; }
   .chip-done { background: var(--green-light); color: var(--green); }
-  .expand-icon { color: var(--muted); font-size: 1.2rem; transition: transform 0.2s; line-height: 1; }
+  .expand-icon { color: var(--muted); font-size: 1rem; transition: transform 0.2s; line-height: 1; flex-shrink: 0; }
   .expanded .expand-icon { transform: rotate(180deg); }
 
-  .lesson-body { display: none; padding: 0 1.2rem 1.2rem; border-top: 1px solid var(--border); }
+  /* LESSON BODY */
+  .lesson-body { display: none; padding: 0 1rem 1rem; background: var(--white); }
   .lesson-body.open { display: block; }
-  .lesson-body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
-  @media (max-width: 600px) { .lesson-body-grid { grid-template-columns: 1fr; } }
-  .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .lesson-body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 0.8rem; }
+  @media (max-width: 500px) { .lesson-body-grid { grid-template-columns: 1fr; } }
+  .field-group { display: flex; flex-direction: column; gap: 0.25rem; }
   .field-group.full { grid-column: 1 / -1; }
-  label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
-  input[type="text"], input[type="date"], textarea, select { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); width: 100%; transition: border-color 0.15s; }
+  label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+  input[type="text"], textarea, select { font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 0.45rem 0.65rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); width: 100%; transition: border-color 0.15s; }
   input:focus, textarea:focus, select:focus { outline: none; border-color: var(--ink); }
-  textarea { resize: vertical; min-height: 64px; }
+  textarea { resize: vertical; min-height: 58px; }
 
-  .time-breakdown { display: flex; flex-direction: column; gap: 0.4rem; }
-  .time-row { display: flex; gap: 0.5rem; align-items: center; }
+  .time-breakdown { display: flex; flex-direction: column; gap: 0.35rem; }
+  .time-row { display: flex; gap: 0.4rem; align-items: center; }
   .time-row input[type="text"] { flex: 1; }
-  .time-row input[type="number"] { width: 70px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); text-align: right; }
+  .time-row input[type="number"] { width: 62px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 0.45rem 0.55rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); text-align: right; }
   .time-row input[type="number"]:focus { outline: none; border-color: var(--ink); }
-  .time-min { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
-  .btn-remove-row { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 0 0.2rem; line-height: 1; }
+  .time-min { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+  .btn-remove-row { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0; line-height: 1; }
   .btn-remove-row:hover { color: var(--accent); }
-  .time-total { font-size: 0.8rem; color: var(--muted); text-align: right; margin-top: 0.2rem; }
+  .time-total { font-size: 0.75rem; color: var(--muted); text-align: right; margin-top: 0.15rem; }
   .time-total.over { color: var(--accent); font-weight: 600; }
-  .btn-add-row { align-self: flex-start; background: none; border: 1.5px dashed var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; margin-top: 0.2rem; transition: all 0.15s; }
+  .btn-add-row { align-self: flex-start; background: none; border: 1.5px dashed var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; padding: 0.25rem 0.7rem; border-radius: 6px; cursor: pointer; margin-top: 0.2rem; transition: all 0.15s; }
   .btn-add-row:hover { border-color: var(--ink); color: var(--ink); }
 
-  .lesson-actions { display: flex; gap: 0.6rem; margin-top: 1.2rem; align-items: center; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 1rem; }
-  .btn-save { padding: 0.45rem 1.2rem; background: var(--ink); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+  .lesson-actions { display: flex; gap: 0.5rem; margin-top: 0.9rem; align-items: center; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 0.8rem; }
+  .btn-save { padding: 0.4rem 1rem; color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
   .btn-save:hover { opacity: 0.8; }
-  .btn-done { padding: 0.45rem 1rem; background: var(--green); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: opacity 0.15s; }
-  .btn-done:hover { opacity: 0.85; }
-  .btn-undone { padding: 0.45rem 1rem; background: transparent; color: var(--green); border: 1.5px solid var(--green); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; }
-  .btn-delete { margin-left: auto; padding: 0.45rem 0.8rem; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+  .lesson-card.j1 .btn-save { background: var(--j1); }
+  .lesson-card.j2 .btn-save { background: var(--j2-badge); }
+  .btn-done { padding: 0.4rem 0.9rem; background: var(--green); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; }
+  .btn-undone { padding: 0.4rem 0.9rem; background: transparent; color: var(--green); border: 1.5px solid var(--green); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; }
+  .btn-delete { margin-left: auto; padding: 0.4rem 0.7rem; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.15s; }
   .btn-delete:hover { color: var(--accent); border-color: var(--accent); }
-  .save-indicator { font-size: 0.78rem; color: var(--green); opacity: 0; transition: opacity 0.3s; }
+  .save-indicator { font-size: 0.75rem; color: var(--green); opacity: 0; transition: opacity 0.3s; }
   .save-indicator.show { opacity: 1; }
-
-  .unsaved-dot { display: none; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; margin-left: 4px; vertical-align: middle; }
+  .unsaved-dot { display: none; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
   .unsaved-dot.visible { display: inline-block; }
+
+  .empty-col { border: 2px dashed var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.82rem; }
 
   .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
   .empty-state .big { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--ink); margin-bottom: 0.5rem; }
-  .empty-state p { font-size: 0.9rem; }
 
+  /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,26,46,0.5); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
-  .modal { background: var(--white); border-radius: 12px; padding: 2rem; width: 90%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-  .modal h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 1.2rem; }
+  .modal { background: var(--white); border-radius: 12px; padding: 2rem; width: 90%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .modal h2 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1.1rem; }
   .modal-fields { display: flex; flex-direction: column; gap: 0.8rem; }
-  .modal-actions { display: flex; gap: 0.6rem; margin-top: 1.5rem; justify-content: flex-end; }
-  .btn-cancel { padding: 0.5rem 1.2rem; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; cursor: pointer; }
-  .btn-create { padding: 0.5rem 1.4rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; }
+  .modal-actions { display: flex; gap: 0.6rem; margin-top: 1.4rem; justify-content: flex-end; }
+  .btn-cancel { padding: 0.5rem 1.1rem; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+  .btn-create { padding: 0.5rem 1.3rem; color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; }
+  .btn-create.j1 { background: var(--j1); }
+  .btn-create.j2 { background: var(--j2-badge); }
+
+  .level-toggle { display: flex; gap: 0; border: 1.5px solid var(--border); border-radius: 7px; overflow: hidden; }
+  .level-opt { flex: 1; padding: 0.5rem; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; border: none; background: transparent; color: var(--muted); font-weight: 500; transition: all 0.15s; }
+  .level-opt.active.j1 { background: var(--j1); color: white; }
+  .level-opt.active.j2 { background: var(--j2-badge); color: white; }
 </style>
 </head>
 <body>
@@ -130,31 +183,69 @@
   <div class="term-bar">
     <h1 id="termTitle">Term 1 · 2025</h1>
     <div class="term-tabs" id="termTabs"></div>
-    <button class="btn-add-lesson" onclick="openModal()">+ Add Lesson</button>
   </div>
-  <div class="term-progress">
-    <div class="progress-stat"><div class="num" id="statDone">0</div><div class="label">Done</div></div>
-    <div class="progress-stat"><div class="num" id="statTotal">0</div><div class="label">Total</div></div>
-    <div class="progress-stat"><div class="num" id="statRemaining">0</div><div class="label">Remaining</div></div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-label"><span>Term Progress</span><span id="progressPct">0%</span></div>
-      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="add-row">
+    <button class="btn-add j1" onclick="openModal('JC1')">+ Add JC1 Lesson</button>
+    <button class="btn-add j2" onclick="openModal('JC2')">+ Add JC2 Lesson</button>
+  </div>
+
+  <div class="progress-row">
+    <div class="progress-box j1">
+      <div class="pb-title">JC1 Progress</div>
+      <div class="pb-stats">
+        <div class="pb-stat"><div class="num" id="j1Done">0</div><div class="lbl">Done</div></div>
+        <div class="pb-stat"><div class="num" id="j1Total">0</div><div class="lbl">Total</div></div>
+        <div class="pb-bar-wrap">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted)"><span>Progress</span><span id="j1Pct">0%</span></div>
+          <div class="pb-bar-bg"><div class="pb-bar-fill" id="j1Fill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="progress-box j2">
+      <div class="pb-title">JC2 Progress</div>
+      <div class="pb-stats">
+        <div class="pb-stat"><div class="num" id="j2Done">0</div><div class="lbl">Done</div></div>
+        <div class="pb-stat"><div class="num" id="j2Total">0</div><div class="lbl">Total</div></div>
+        <div class="pb-bar-wrap">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted)"><span>Progress</span><span id="j2Pct">0%</span></div>
+          <div class="pb-bar-bg"><div class="pb-bar-fill" id="j2Fill" style="width:0%"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="lessons-list" id="lessonsList"></div>
+
+  <div id="weekSections"></div>
 </div>
 
+<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h2>New Lesson</h2>
+  <div class="modal" id="modalBox">
+    <h2 id="modalTitle">New Lesson</h2>
     <div class="modal-fields">
-      <div class="field-group"><label>Topic / Title</label><input type="text" id="newTitle" placeholder="e.g. Electrochemistry — Electrolytic Cells"></div>
-      <div class="field-group"><label>Lesson Date</label><input type="date" id="newDate"></div>
-      <div class="field-group"><label>Term</label><select id="newTerm"></select></div>
+      <div class="field-group">
+        <label>Level</label>
+        <div class="level-toggle">
+          <button class="level-opt j1 active" id="optJ1" onclick="setModalLevel('JC1')">JC1</button>
+          <button class="level-opt j2" id="optJ2" onclick="setModalLevel('JC2')">JC2</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Week Number</label>
+        <input type="number" id="newWeek" min="1" max="20" value="1" style="font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.5rem 0.7rem;border:1.5px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);width:100%;">
+      </div>
+      <div class="field-group">
+        <label>Topic / Title</label>
+        <input type="text" id="newTitle" placeholder="e.g. Electrochemistry — Electrolytic Cells">
+      </div>
+      <div class="field-group">
+        <label>Term</label>
+        <select id="newTerm"></select>
+      </div>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-create" onclick="createLesson()">Create Lesson</button>
+      <button class="btn-create j1" id="createBtn" onclick="createLesson()">Create Lesson</button>
     </div>
   </div>
 </div>
@@ -167,11 +258,11 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const TERMS = ['Term 1 · 2025', 'Term 2 · 2025', 'Term 3 · 2025', 'Term 4 · 2025'];
 let currentTerm = 0;
 let lessons = [];
+let modalLevel = 'JC1';
 
 function showLoading(msg) { document.getElementById('loadingMsg').textContent = msg || 'Loading…'; document.getElementById('loadingOverlay').classList.add('visible'); }
 function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
 function esc(s) { if (!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function formatDate(d) { if (!d) return ''; return new Date(d+'T00:00:00').toLocaleDateString('en-SG', { weekday:'short', day:'numeric', month:'short', year:'numeric' }); }
 
 window.onload = async () => {
   const tabs = document.getElementById('termTabs');
@@ -189,184 +280,11 @@ window.onload = async () => {
 
 async function loadTerm(termIdx) {
   showLoading('Loading lessons…');
-  const { data, error } = await sb.from('lesson_plans').select('*').eq('term_index', termIdx).order('week_number', { ascending: true });
+  const { data, error } = await sb.from('lesson_plans').select('*').eq('term_index', termIdx).order('week_number').order('level');
   hideLoading();
-  if (error) { console.error('Load error:', error); return; }
+  if (error) { console.error(error); return; }
   lessons = data || [];
   renderAll();
-}
-
-// Read all current field values from the DOM for a given card
-function collectFormData(idx) {
-  const get = id => { const el = document.getElementById(id); return el ? el.value : ''; };
-  const card = document.getElementById('card-' + idx);
-  const inputs = card.querySelectorAll('input[type="text"], input[type="date"], textarea');
-  // Collect time rows from DOM
-  const timeRowEls = card.querySelectorAll('.time-row');
-  const time_rows = Array.from(timeRowEls).map(row => {
-    const actEl = row.querySelector('input[type="text"]');
-    const minEl = row.querySelector('input[type="number"]');
-    return { activity: actEl ? actEl.value : '', mins: minEl ? minEl.value : '' };
-  });
-  return {
-    title: card.querySelector('.field-title') ? card.querySelector('.field-title').value : lessons[idx].title,
-    lesson_date: card.querySelector('.field-date') ? card.querySelector('.field-date').value : lessons[idx].lesson_date,
-    objectives: card.querySelector('.field-objectives') ? card.querySelector('.field-objectives').value : lessons[idx].objectives,
-    homework: card.querySelector('.field-homework') ? card.querySelector('.field-homework').value : lessons[idx].homework,
-    followup: card.querySelector('.field-followup') ? card.querySelector('.field-followup').value : lessons[idx].followup,
-    notes: card.querySelector('.field-notes') ? card.querySelector('.field-notes').value : lessons[idx].notes,
-    time_rows
-  };
-}
-
-async function saveCard(idx) {
-  const formData = collectFormData(idx);
-  Object.assign(lessons[idx], formData);
-
-  const payload = {
-    term_index: lessons[idx].term_index,
-    term_label: lessons[idx].term_label,
-    week_number: lessons[idx].week_number,
-    title: lessons[idx].title || '',
-    lesson_date: lessons[idx].lesson_date || null,
-    objectives: lessons[idx].objectives || '',
-    homework: lessons[idx].homework || '',
-    followup: lessons[idx].followup || '',
-    notes: lessons[idx].notes || '',
-    time_rows: lessons[idx].time_rows || [],
-    done: lessons[idx].done || false
-  };
-
-  const saveBtn = document.getElementById('savebtn-' + idx);
-  if (saveBtn) { saveBtn.textContent = 'Saving…'; saveBtn.disabled = true; }
-
-  const { error } = await sb.from('lesson_plans').update(payload).eq('id', lessons[idx].id);
-
-  if (saveBtn) { saveBtn.textContent = 'Save'; saveBtn.disabled = false; }
-
-  if (error) {
-    console.error('Save error:', error);
-    alert('Save failed. Please try again.');
-    return;
-  }
-
-  // Flash saved indicator
-  const ind = document.getElementById('saveind-' + idx);
-  if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 2000); }
-
-  // Mark dot as saved
-  const dot = document.getElementById('dot-' + idx);
-  if (dot) dot.classList.remove('visible');
-
-  // Update header chips and title without collapsing
-  updateCardHeader(idx);
-  renderProgress();
-}
-
-function updateCardHeader(idx) {
-  const lesson = lessons[idx];
-  const titleEl = document.querySelector('#card-' + idx + ' .lesson-title');
-  const metaEl = document.querySelector('#card-' + idx + ' .lesson-meta');
-  const chipsEl = document.querySelector('#card-' + idx + ' .lesson-chips');
-  const badgeEl = document.querySelector('#card-' + idx + ' .week-badge');
-
-  if (titleEl) titleEl.innerHTML = esc(lesson.title) || '<em style="color:#aaa">Untitled</em>';
-  if (metaEl) metaEl.textContent = lesson.lesson_date ? formatDate(lesson.lesson_date) : 'No date set';
-
-  const chips = [];
-  if (lesson.done) chips.push('<span class="chip chip-done">&#10003; Done</span>');
-  if (lesson.homework) chips.push('<span class="chip chip-hw">HW</span>');
-  if (lesson.followup) chips.push('<span class="chip chip-followup">Follow-up</span>');
-  if (chipsEl) chipsEl.innerHTML = chips.join('');
-
-  const card = document.getElementById('card-' + idx);
-  if (lesson.done) { card.classList.add('done'); if (badgeEl) badgeEl.style.background = 'var(--green)'; }
-  else { card.classList.remove('done'); if (badgeEl) badgeEl.style.background = ''; }
-}
-
-function markUnsaved(idx) {
-  const dot = document.getElementById('dot-' + idx);
-  if (dot) dot.classList.add('visible');
-}
-
-async function toggleDone(idx) {
-  lessons[idx].done = !lessons[idx].done;
-  const payload = { done: lessons[idx].done };
-  await sb.from('lesson_plans').update(payload).eq('id', lessons[idx].id);
-  updateCardHeader(idx);
-  renderProgress();
-  // Re-render just the done button
-  const actionsEl = document.querySelector('#body-' + idx + ' .lesson-actions');
-  if (actionsEl) {
-    const doneBtn = actionsEl.querySelector('.btn-done, .btn-undone');
-    if (doneBtn) {
-      doneBtn.outerHTML = lessons[idx].done
-        ? `<button class="btn-undone" onclick="toggleDone(${idx})">&#8617; Mark Undone</button>`
-        : `<button class="btn-done" onclick="toggleDone(${idx})">&#10003; Mark as Done</button>`;
-    }
-  }
-}
-
-async function deleteLesson(idx) {
-  if (!confirm('Delete this lesson?')) return;
-  const lesson = lessons[idx];
-  if (lesson.id) {
-    const { error } = await sb.from('lesson_plans').delete().eq('id', lesson.id);
-    if (error) { console.error(error); return; }
-  }
-  lessons.splice(idx, 1);
-  renderAll();
-}
-
-async function addTimeRow(idx) {
-  if (!lessons[idx].time_rows) lessons[idx].time_rows = [];
-  // Read current time rows from DOM first so we don't lose them
-  const card = document.getElementById('card-' + idx);
-  const timeRowEls = card.querySelectorAll('.time-row');
-  lessons[idx].time_rows = Array.from(timeRowEls).map(row => ({
-    activity: row.querySelector('input[type="text"]').value,
-    mins: row.querySelector('input[type="number"]').value
-  }));
-  lessons[idx].time_rows.push({ activity: '', mins: '' });
-  // Re-render just the time breakdown
-  renderTimeRows(idx);
-  markUnsaved(idx);
-}
-
-function removeTimeRow(idx, ri) {
-  // Read current time rows from DOM first
-  const card = document.getElementById('card-' + idx);
-  const timeRowEls = card.querySelectorAll('.time-row');
-  lessons[idx].time_rows = Array.from(timeRowEls).map(row => ({
-    activity: row.querySelector('input[type="text"]').value,
-    mins: row.querySelector('input[type="number"]').value
-  }));
-  lessons[idx].time_rows.splice(ri, 1);
-  renderTimeRows(idx);
-  markUnsaved(idx);
-}
-
-function renderTimeRows(idx) {
-  const container = document.getElementById('timebreakdown-' + idx);
-  if (!container) return;
-  container.innerHTML = (lessons[idx].time_rows || []).map((r, ri) => `
-    <div class="time-row">
-      <input type="text" value="${esc(r.activity)}" placeholder="Activity" oninput="markUnsaved(${idx})">
-      <input type="number" value="${r.mins||''}" min="0" max="180" placeholder="0" oninput="updateTimeTotal(${idx})">
-      <span class="time-min">min</span>
-      <button class="btn-remove-row" onclick="removeTimeRow(${idx},${ri})">&#215;</button>
-    </div>`).join('');
-  updateTimeTotal(idx);
-}
-
-function updateTimeTotal(idx) {
-  const card = document.getElementById('card-' + idx);
-  if (!card) return;
-  const nums = card.querySelectorAll('.time-row input[type="number"]');
-  const total = Array.from(nums).reduce((s, el) => s + (parseInt(el.value)||0), 0);
-  const el = document.getElementById('timetotal-' + idx);
-  if (el) { el.textContent = total + ' / 120 min'; el.className = 'time-total' + (total > 120 ? ' over' : ''); }
-  markUnsaved(idx);
 }
 
 async function switchTerm(i) {
@@ -376,32 +294,75 @@ async function switchTerm(i) {
   await loadTerm(i);
 }
 
-function renderAll() { renderProgress(); renderLessons(); }
+function renderAll() {
+  renderProgress();
+  renderWeeks();
+}
 
 function renderProgress() {
-  const total = lessons.length, done = lessons.filter(l => l.done).length;
-  const pct = total ? Math.round((done / total) * 100) : 0;
-  document.getElementById('statDone').textContent = done;
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statRemaining').textContent = total - done;
-  document.getElementById('progressPct').textContent = pct + '%';
-  document.getElementById('progressFill').style.width = pct + '%';
+  const j1 = lessons.filter(l => l.level === 'JC1');
+  const j2 = lessons.filter(l => l.level === 'JC2');
+  const j1done = j1.filter(l => l.done).length;
+  const j2done = j2.filter(l => l.done).length;
+  const j1pct = j1.length ? Math.round(j1done/j1.length*100) : 0;
+  const j2pct = j2.length ? Math.round(j2done/j2.length*100) : 0;
+  document.getElementById('j1Done').textContent = j1done;
+  document.getElementById('j1Total').textContent = j1.length;
+  document.getElementById('j1Pct').textContent = j1pct + '%';
+  document.getElementById('j1Fill').style.width = j1pct + '%';
+  document.getElementById('j2Done').textContent = j2done;
+  document.getElementById('j2Total').textContent = j2.length;
+  document.getElementById('j2Pct').textContent = j2pct + '%';
+  document.getElementById('j2Fill').style.width = j2pct + '%';
 }
 
-function renderLessons() {
-  const container = document.getElementById('lessonsList');
+function renderWeeks() {
+  const container = document.getElementById('weekSections');
   if (!lessons.length) {
-    container.innerHTML = `<div class="empty-state"><div class="big">No lessons yet</div><p>Click "+ Add Lesson" to plan your first lesson for ${TERMS[currentTerm]}.</p></div>`;
+    container.innerHTML = '<div class="empty-state"><div class="big">No lessons yet</div><p>Click "+ Add JC1 Lesson" or "+ Add JC2 Lesson" to get started.</p></div>';
     return;
   }
+  // Get all unique week numbers
+  const weeks = [...new Set(lessons.map(l => l.week_number))].sort((a,b) => a-b);
   container.innerHTML = '';
-  lessons.forEach((lesson, idx) => container.appendChild(buildCard(lesson, idx)));
+  weeks.forEach(wk => {
+    const j1lessons = lessons.filter(l => l.week_number === wk && l.level === 'JC1');
+    const j2lessons = lessons.filter(l => l.week_number === wk && l.level === 'JC2');
+    const section = document.createElement('div');
+    section.className = 'week-section';
+    section.innerHTML = `
+      <div class="week-label">Week ${wk}</div>
+      <div class="week-columns">
+        <div class="week-col">
+          <div class="col-header j1">JC1</div>
+          <div id="j1-wk${wk}"></div>
+        </div>
+        <div class="week-col">
+          <div class="col-header j2">JC2</div>
+          <div id="j2-wk${wk}"></div>
+        </div>
+      </div>`;
+    container.appendChild(section);
+
+    const j1col = document.getElementById('j1-wk' + wk);
+    const j2col = document.getElementById('j2-wk' + wk);
+
+    if (j1lessons.length) j1lessons.forEach(l => j1col.appendChild(buildCard(l)));
+    else j1col.innerHTML = '<div class="empty-col">No JC1 lesson</div>';
+
+    if (j2lessons.length) j2lessons.forEach(l => j2col.appendChild(buildCard(l)));
+    else j2col.innerHTML = '<div class="empty-col">No JC2 lesson</div>';
+  });
 }
 
-function buildCard(lesson, idx) {
+function getLessonIdx(id) { return lessons.findIndex(l => l.id === id); }
+
+function buildCard(lesson) {
+  const lvl = lesson.level === 'JC1' ? 'j1' : 'j2';
+  const id = lesson.id;
   const card = document.createElement('div');
-  card.className = 'lesson-card' + (lesson.done ? ' done' : '');
-  card.id = 'card-' + idx;
+  card.className = `lesson-card ${lvl}${lesson.done ? ' done' : ''}`;
+  card.id = 'card-' + id;
 
   const chips = [];
   if (lesson.done) chips.push('<span class="chip chip-done">&#10003; Done</span>');
@@ -410,79 +371,238 @@ function buildCard(lesson, idx) {
 
   const timeRows = (lesson.time_rows || []).map((r, ri) => `
     <div class="time-row">
-      <input type="text" value="${esc(r.activity)}" placeholder="Activity" oninput="markUnsaved(${idx})">
-      <input type="number" value="${r.mins||''}" min="0" max="180" placeholder="0" oninput="updateTimeTotal(${idx})">
+      <input type="text" value="${esc(r.activity)}" placeholder="Activity" oninput="markUnsaved('${id}')">
+      <input type="number" value="${r.mins||''}" min="0" max="180" placeholder="0" oninput="updateTimeTotal('${id}')">
       <span class="time-min">min</span>
-      <button class="btn-remove-row" onclick="removeTimeRow(${idx},${ri})">&#215;</button>
+      <button class="btn-remove-row" onclick="removeTimeRow('${id}',${ri})">&#215;</button>
     </div>`).join('');
-
   const totalMins = (lesson.time_rows || []).reduce((s, r) => s + (parseInt(r.mins)||0), 0);
 
   card.innerHTML = `
-    <div class="lesson-header" onclick="toggleCard(${idx})">
-      <span class="week-badge"style="${lesson.done ? 'background:var(--green)' : ''}">Wk ${lesson.week_number}</span>
+    <div class="lesson-header" onclick="toggleCard('${id}')">
+      <span class="level-badge">${lesson.level}</span>
       <div class="lesson-title-area">
         <div class="lesson-title">${esc(lesson.title) || '<em style="color:#aaa">Untitled</em>'}</div>
-        <div class="lesson-meta">${lesson.lesson_date ? formatDate(lesson.lesson_date) : 'No date set'}</div>
+        <div class="lesson-meta">Week ${lesson.week_number}</div>
       </div>
       <div class="lesson-chips">${chips.join('')}</div>
       <span class="expand-icon">&#9662;</span>
     </div>
-    <div class="lesson-body" id="body-${idx}">
+    <div class="lesson-body" id="body-${id}">
       <div class="lesson-body-grid">
-        <div class="field-group">
+        <div class="field-group full">
           <label>Lesson Title / Topic</label>
-          <input type="text" class="field-title" value="${esc(lesson.title)}" placeholder="e.g. Electrochemistry" oninput="markUnsaved(${idx})">
-        </div>
-        <div class="field-group">
-          <label>Lesson Date</label>
-          <input type="date" class="field-date" value="${lesson.lesson_date||''}" onchange="markUnsaved(${idx})">
+          <input type="text" class="field-title" value="${esc(lesson.title)}" placeholder="e.g. Electrochemistry" oninput="markUnsaved('${id}')">
         </div>
         <div class="field-group full">
           <label>Learning Objectives</label>
-          <textarea class="field-objectives" placeholder="What should students be able to do by end of lesson?" oninput="markUnsaved(${idx})">${esc(lesson.objectives)}</textarea>
+          <textarea class="field-objectives" placeholder="What should students be able to do by end of lesson?" oninput="markUnsaved('${id}')">${esc(lesson.objectives)}</textarea>
         </div>
         <div class="field-group full">
           <label>Time Breakdown</label>
-          <div class="time-breakdown" id="timebreakdown-${idx}">${timeRows}</div>
-          <div class="time-total${totalMins>120?' over':''}" id="timetotal-${idx}">${totalMins} / 120 min</div>
-          <button class="btn-add-row" onclick="addTimeRow(${idx})">+ Add activity</button>
+          <div class="time-breakdown" id="timebreakdown-${id}">${timeRows}</div>
+          <div class="time-total${totalMins>120?' over':''}" id="timetotal-${id}">${totalMins} / 120 min</div>
+          <button class="btn-add-row" onclick="addTimeRow('${id}')">+ Add activity</button>
         </div>
         <div class="field-group">
           <label>Homework Assigned</label>
-          <textarea class="field-homework" placeholder="e.g. Practice Questions Pg 45-47" oninput="markUnsaved(${idx})">${esc(lesson.homework)}</textarea>
+          <textarea class="field-homework" placeholder="e.g. Practice Questions Pg 45-47" oninput="markUnsaved('${id}')">${esc(lesson.homework)}</textarea>
         </div>
         <div class="field-group">
           <label>Follow Up Next Lesson</label>
-          <textarea class="field-followup" placeholder="e.g. Recap Ksp before new topic" oninput="markUnsaved(${idx})">${esc(lesson.followup)}</textarea>
+          <textarea class="field-followup" placeholder="e.g. Recap Ksp before next lesson" oninput="markUnsaved('${id}')">${esc(lesson.followup)}</textarea>
         </div>
         <div class="field-group full">
           <label>Notes / Reminders</label>
-          <textarea class="field-notes" placeholder="Anything else to remember..." oninput="markUnsaved(${idx})">${esc(lesson.notes)}</textarea>
+          <textarea class="field-notes" placeholder="Anything else to remember..." oninput="markUnsaved('${id}')">${esc(lesson.notes)}</textarea>
         </div>
       </div>
       <div class="lesson-actions">
-        <button class="btn-save" id="savebtn-${idx}" onclick="saveCard(${idx})">Save</button>
-        <span class="save-indicator" id="saveind-${idx}">Saved &#10003;</span>
-        <span class="unsaved-dot" id="dot-${idx}" title="Unsaved changes"></span>
+        <button class="btn-save" id="savebtn-${id}" onclick="saveCard('${id}')">Save</button>
+        <span class="save-indicator" id="saveind-${id}">Saved &#10003;</span>
+        <span class="unsaved-dot" id="dot-${id}" title="Unsaved changes"></span>
         ${lesson.done
-          ? `<button class="btn-undone" onclick="toggleDone(${idx})">&#8617; Mark Undone</button>`
-          : `<button class="btn-done" onclick="toggleDone(${idx})">&#10003; Mark as Done</button>`}
-        <button class="btn-delete" onclick="deleteLesson(${idx})">Delete</button>
+          ? `<button class="btn-undone" onclick="toggleDone('${id}')">&#8617; Mark Undone</button>`
+          : `<button class="btn-done" onclick="toggleDone('${id}')">&#10003; Mark as Done</button>`}
+        <button class="btn-delete" onclick="deleteLesson('${id}')">Delete</button>
       </div>
     </div>`;
   return card;
 }
 
-function toggleCard(idx) {
-  document.getElementById('body-'+idx).classList.toggle('open');
-  document.getElementById('card-'+idx).classList.toggle('expanded');
+function toggleCard(id) {
+  document.getElementById('body-'+id).classList.toggle('open');
+  document.getElementById('card-'+id).classList.toggle('expanded');
 }
 
-function openModal() {
+function markUnsaved(id) {
+  const dot = document.getElementById('dot-'+id);
+  if (dot) dot.classList.add('visible');
+}
+
+function collectFormData(id) {
+  const card = document.getElementById('card-'+id);
+  const timeRowEls = card.querySelectorAll('.time-row');
+  const time_rows = Array.from(timeRowEls).map(row => ({
+    activity: row.querySelector('input[type="text"]').value,
+    mins: row.querySelector('input[type="number"]').value
+  }));
+  return {
+    title: card.querySelector('.field-title').value,
+    objectives: card.querySelector('.field-objectives').value,
+    homework: card.querySelector('.field-homework').value,
+    followup: card.querySelector('.field-followup').value,
+    notes: card.querySelector('.field-notes').value,
+    time_rows
+  };
+}
+
+async function saveCard(id) {
+  const idx = getLessonIdx(id);
+  if (idx === -1) return;
+  const formData = collectFormData(id);
+  Object.assign(lessons[idx], formData);
+
+  const btn = document.getElementById('savebtn-'+id);
+  if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+
+  const { error } = await sb.from('lesson_plans').update({
+    title: lessons[idx].title || '',
+    objectives: lessons[idx].objectives || '',
+    homework: lessons[idx].homework || '',
+    followup: lessons[idx].followup || '',
+    notes: lessons[idx].notes || '',
+    time_rows: lessons[idx].time_rows || [],
+    done: lessons[idx].done || false
+  }).eq('id', id);
+
+  if (btn) { btn.textContent = 'Save'; btn.disabled = false; }
+  if (error) { console.error(error); alert('Save failed. Please try again.'); return; }
+
+  // Flash saved
+  const ind = document.getElementById('saveind-'+id);
+  if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 2000); }
+  const dot = document.getElementById('dot-'+id);
+  if (dot) dot.classList.remove('visible');
+
+  // Update card header in place
+  const titleEl = document.querySelector('#card-'+id+' .lesson-title');
+  if (titleEl) titleEl.innerHTML = esc(lessons[idx].title) || '<em style="color:#aaa">Untitled</em>';
+  const chipsEl = document.querySelector('#card-'+id+' .lesson-chips');
+  if (chipsEl) {
+    const chips = [];
+    if (lessons[idx].done) chips.push('<span class="chip chip-done">&#10003; Done</span>');
+    if (lessons[idx].homework) chips.push('<span class="chip chip-hw">HW</span>');
+    if (lessons[idx].followup) chips.push('<span class="chip chip-followup">Follow-up</span>');
+    chipsEl.innerHTML = chips.join('');
+  }
+  renderProgress();
+}
+
+async function toggleDone(id) {
+  const idx = getLessonIdx(id);
+  if (idx === -1) return;
+  lessons[idx].done = !lessons[idx].done;
+  await sb.from('lesson_plans').update({ done: lessons[idx].done }).eq('id', id);
+  const card = document.getElementById('card-'+id);
+  if (lessons[idx].done) card.classList.add('done'); else card.classList.remove('done');
+  const badge = card.querySelector('.level-badge');
+  if (badge) badge.style.background = lessons[idx].done ? 'var(--green)' : '';
+  const chipsEl = card.querySelector('.lesson-chips');
+  if (chipsEl) {
+    const chips = [];
+    if (lessons[idx].done) chips.push('<span class="chip chip-done">&#10003; Done</span>');
+    if (lessons[idx].homework) chips.push('<span class="chip chip-hw">HW</span>');
+    if (lessons[idx].followup) chips.push('<span class="chip chip-followup">Follow-up</span>');
+    chipsEl.innerHTML = chips.join('');
+  }
+  const actionsEl = document.querySelector('#body-'+id+' .lesson-actions');
+  if (actionsEl) {
+    const btn = actionsEl.querySelector('.btn-done, .btn-undone');
+    if (btn) btn.outerHTML = lessons[idx].done
+      ? `<button class="btn-undone" onclick="toggleDone('${id}')">&#8617; Mark Undone</button>`
+      : `<button class="btn-done" onclick="toggleDone('${id}')">&#10003; Mark as Done</button>`;
+  }
+  renderProgress();
+}
+
+async function deleteLesson(id) {
+  if (!confirm('Delete this lesson?')) return;
+  const { error } = await sb.from('lesson_plans').delete().eq('id', id);
+  if (error) { console.error(error); return; }
+  lessons = lessons.filter(l => l.id != id);
+  renderAll();
+}
+
+function addTimeRow(id) {
+  const idx = getLessonIdx(id);
+  if (idx === -1) return;
+  const card = document.getElementById('card-'+id);
+  const timeRowEls = card.querySelectorAll('.time-row');
+  lessons[idx].time_rows = Array.from(timeRowEls).map(row => ({
+    activity: row.querySelector('input[type="text"]').value,
+    mins: row.querySelector('input[type="number"]').value
+  }));
+  lessons[idx].time_rows.push({ activity: '', mins: '' });
+  renderTimeRows(id);
+  markUnsaved(id);
+}
+
+function removeTimeRow(id, ri) {
+  const idx = getLessonIdx(id);
+  if (idx === -1) return;
+  const card = document.getElementById('card-'+id);
+  const timeRowEls = card.querySelectorAll('.time-row');
+  lessons[idx].time_rows = Array.from(timeRowEls).map(row => ({
+    activity: row.querySelector('input[type="text"]').value,
+    mins: row.querySelector('input[type="number"]').value
+  }));
+  lessons[idx].time_rows.splice(ri, 1);
+  renderTimeRows(id);
+  markUnsaved(id);
+}
+
+function renderTimeRows(id) {
+  const idx = getLessonIdx(id);
+  const container = document.getElementById('timebreakdown-'+id);
+  if (!container) return;
+  container.innerHTML = (lessons[idx].time_rows || []).map((r, ri) => `
+    <div class="time-row">
+      <input type="text" value="${esc(r.activity)}" placeholder="Activity" oninput="markUnsaved('${id}')">
+      <input type="number" value="${r.mins||''}" min="0" max="180" placeholder="0" oninput="updateTimeTotal('${id}')">
+      <span class="time-min">min</span>
+      <button class="btn-remove-row" onclick="removeTimeRow('${id}',${ri})">&#215;</button>
+    </div>`).join('');
+  updateTimeTotal(id);
+}
+
+function updateTimeTotal(id) {
+  const card = document.getElementById('card-'+id);
+  if (!card) return;
+  const nums = card.querySelectorAll('.time-row input[type="number"]');
+  const total = Array.from(nums).reduce((s, el) => s + (parseInt(el.value)||0), 0);
+  const el = document.getElementById('timetotal-'+id);
+  if (el) { el.textContent = total + ' / 120 min'; el.className = 'time-total' + (total > 120 ? ' over' : ''); }
+  markUnsaved(id);
+}
+
+// MODAL
+function setModalLevel(lvl) {
+  modalLevel = lvl;
+  document.getElementById('optJ1').classList.toggle('active', lvl === 'JC1');
+  document.getElementById('optJ2').classList.toggle('active', lvl === 'JC2');
+  document.getElementById('createBtn').className = 'btn-create ' + (lvl === 'JC1' ? 'j1' : 'j2');
+}
+
+function openModal(lvl) {
+  modalLevel = lvl || 'JC1';
+  setModalLevel(modalLevel);
   document.getElementById('newTerm').value = currentTerm;
   document.getElementById('newTitle').value = '';
-  document.getElementById('newDate').value = '';
+  // Suggest next week number
+  const existingWeeks = lessons.filter(l => l.level === modalLevel).map(l => l.week_number);
+  const nextWk = existingWeeks.length ? Math.max(...existingWeeks) + 1 : 1;
+  document.getElementById('newWeek').value = nextWk;
   document.getElementById('modalOverlay').classList.add('open');
   setTimeout(() => document.getElementById('newTitle').focus(), 100);
 }
@@ -490,13 +610,12 @@ function closeModal() { document.getElementById('modalOverlay').classList.remove
 
 async function createLesson() {
   const title = document.getElementById('newTitle').value.trim();
-  const lesson_date = document.getElementById('newDate').value || null;
+  const week_number = parseInt(document.getElementById('newWeek').value) || 1;
   const termIdx = parseInt(document.getElementById('newTerm').value);
-  const { count } = await sb.from('lesson_plans').select('id', { count: 'exact', head: true }).eq('term_index', termIdx);
   const newLesson = {
     term_index: termIdx, term_label: TERMS[termIdx],
-    week_number: (count || 0) + 1,
-    title, lesson_date,
+    week_number, level: modalLevel,
+    title, lesson_date: null,
     objectives: '', homework: '', followup: '', notes: '',
     time_rows: [
       { activity: 'Recap / Warm-up', mins: '10' },
