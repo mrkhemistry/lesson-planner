@@ -8,163 +8,210 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --ink: #1a1a2e; --paper: #f5f2eb; --cream: #ede9df;
-    --muted: #7a7468; --border: #d6d0c4; --white: #ffffff;
-    --gold: #d4a853;
-    --green: #2d6a4f; --green-light: #e8f4f0;
-    /* JC1: warm teal */
-    --j1: #0e6b72; --j1-light: #e0f4f5; --j1-badge: #0e6b72; --j1-border: #9dd4d8;
-    /* JC2: warm amber/rust */
-    --j2: #9b3a10; --j2-light: #fdf0ea; --j2-badge: #c84b31; --j2-border: #f0b89a;
-    --accent: #c84b31;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+    /* Dark theme base */
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222638;
+    --surface3: #2a2f45;
+    --border: #2e3350;
+    --border2: #3a4060;
+    --text: #e8eaf0;
+    --text2: #9aa0b8;
+    --text3: #6b7290;
 
-  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(245,242,235,0.75); z-index: 300; align-items: center; justify-content: center; gap: 0.6rem; font-size: 0.9rem; color: var(--muted); }
+    /* JC1: teal/cyan */
+    --j1: #00c9b1;
+    --j1-dim: #00796b;
+    --j1-bg: rgba(0,201,177,0.08);
+    --j1-border: rgba(0,201,177,0.25);
+
+    /* JC2: amber/orange */
+    --j2: #ff8c42;
+    --j2-dim: #b85c1a;
+    --j2-bg: rgba(255,140,66,0.08);
+    --j2-border: rgba(255,140,66,0.25);
+
+    --green: #4caf7d;
+    --green-bg: rgba(76,175,125,0.1);
+    --red: #f06060;
+    --gold: #f0c040;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* LOADING */
+  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(15,17,23,0.8); z-index: 300; align-items: center; justify-content: center; gap: 0.7rem; font-size: 0.9rem; color: var(--text2); }
   .loading-overlay.visible { display: flex; }
-  .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .spinner { width: 20px; height: 20px; border: 2px solid var(--border2); border-top-color: var(--j1); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  header { background: var(--ink); color: var(--paper); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
-  .logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; }
+  /* HEADER */
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 58px; position: sticky; top: 0; z-index: 100; }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--text); }
   .logo span { color: var(--gold); }
-  .header-meta { font-size: 0.78rem; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
+  .header-meta { font-size: 0.75rem; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; }
 
+  /* LAYOUT */
   .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
 
   /* TERM BAR */
   .term-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .term-bar h1 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; flex: 1; }
-  .term-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-  .term-tab { padding: 0.4rem 1rem; border: 1.5px solid var(--border); background: transparent; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--muted); transition: all 0.15s; }
-  .term-tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .term-tab:hover:not(.active) { border-color: var(--ink); color: var(--ink); }
+  .term-bar h1 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; flex: 1; color: var(--text); }
+  .term-tabs { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .term-tab { padding: 0.35rem 0.9rem; border: 1px solid var(--border2); background: transparent; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; color: var(--text3); transition: all 0.15s; }
+  .term-tab.active { background: var(--surface3); color: var(--text); border-color: var(--border2); }
+  .term-tab:hover:not(.active) { border-color: var(--text3); color: var(--text2); }
 
-  .add-row { display: flex; gap: 0.6rem; margin-bottom: 2rem; }
-  .btn-add { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.2rem; color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
+  /* ADD BUTTONS */
+  .add-row { display: flex; gap: 0.6rem; margin-bottom: 1.8rem; }
+  .btn-add { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.2rem; border: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
   .btn-add:hover { opacity: 0.85; }
-  .btn-add.j1 { background: var(--j1); }
-  .btn-add.j2 { background: var(--j2-badge); }
+  .btn-add.j1 { background: var(--j1); color: #0a1a18; }
+  .btn-add.j2 { background: var(--j2); color: #1a0e06; }
 
   /* PROGRESS */
   .progress-row { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-  .progress-box { flex: 1; min-width: 200px; border-radius: 10px; padding: 1rem 1.2rem; border: 1.5px solid; }
-  .progress-box.j1 { background: var(--j1-light); border-color: var(--j1-border); }
-  .progress-box.j2 { background: var(--j2-light); border-color: var(--j2-border); }
-  .pb-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.6rem; }
+  .progress-box { flex: 1; min-width: 220px; border-radius: 10px; padding: 1rem 1.3rem; border: 1px solid; }
+  .progress-box.j1 { background: var(--j1-bg); border-color: var(--j1-border); }
+  .progress-box.j2 { background: var(--j2-bg); border-color: var(--j2-border); }
+  .pb-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.7rem; }
   .progress-box.j1 .pb-title { color: var(--j1); }
-  .progress-box.j2 .pb-title { color: var(--j2-badge); }
+  .progress-box.j2 .pb-title { color: var(--j2); }
   .pb-stats { display: flex; gap: 1.5rem; align-items: center; }
-  .pb-stat .num { font-family: 'DM Serif Display', serif; font-size: 1.6rem; line-height: 1; color: var(--ink); }
-  .pb-stat .lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .pb-stat .num { font-family: 'DM Serif Display', serif; font-size: 1.7rem; line-height: 1; color: var(--text); }
+  .pb-stat .lbl { font-size: 0.68rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
   .pb-bar-wrap { flex: 1; }
-  .pb-bar-bg { height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 0.3rem; }
-  .progress-box.j1 .pb-bar-fill { height: 100%; background: var(--j1); border-radius: 4px; transition: width 0.4s ease; }
-  .progress-box.j2 .pb-bar-fill { height: 100%; background: var(--j2-badge); border-radius: 4px; transition: width 0.4s ease; }
+  .pb-pct-row { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text3); margin-bottom: 0.35rem; }
+  .pb-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-box.j1 .pb-bar-fill { height: 100%; background: var(--j1); border-radius: 3px; transition: width 0.4s ease; }
+  .progress-box.j2 .pb-bar-fill { height: 100%; background: var(--j2); border-radius: 3px; transition: width 0.4s ease; }
 
-  /* WEEK LAYOUT */
+  /* WEEK SECTIONS */
   .week-section { margin-bottom: 2rem; }
-  .week-label { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--muted); margin-bottom: 0.7rem; padding-bottom: 0.4rem; border-bottom: 1.5px solid var(--border); display: flex; align-items: center; gap: 0.6rem; }
-  .week-label span { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: var(--muted); font-weight: 400; }
-
+  .week-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
   .week-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   @media (max-width: 700px) { .week-columns { grid-template-columns: 1fr; } }
-
   .week-col { display: flex; flex-direction: column; gap: 0.6rem; }
-  .col-header { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 4px; display: inline-block; margin-bottom: 0.2rem; }
-  .col-header.j1 { background: var(--j1-light); color: var(--j1); }
-  .col-header.j2 { background: var(--j2-light); color: var(--j2-badge); }
+  .col-header { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.28rem 0.7rem; border-radius: 4px; display: inline-block; margin-bottom: 0.3rem; }
+  .col-header.j1 { background: var(--j1-bg); color: var(--j1); border: 1px solid var(--j1-border); }
+  .col-header.j2 { background: var(--j2-bg); color: var(--j2); border: 1px solid var(--j2-border); }
 
   /* LESSON CARD */
-  .lesson-card { border-radius: 10px; overflow: hidden; transition: box-shadow 0.15s; border: 1.5px solid; }
-  .lesson-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
-  .lesson-card.j1 { background: var(--white); border-color: var(--j1-border); }
-  .lesson-card.j2 { background: var(--white); border-color: var(--j2-border); }
-  .lesson-card.done { opacity: 0.6; }
+  .lesson-card { border-radius: 10px; overflow: hidden; border: 1px solid; transition: box-shadow 0.15s, border-color 0.15s; }
+  .lesson-card.j1 { background: var(--surface); border-color: var(--j1-border); }
+  .lesson-card.j2 { background: var(--surface); border-color: var(--j2-border); }
+  .lesson-card.j1:hover { border-color: var(--j1); box-shadow: 0 0 0 1px var(--j1-border), 0 4px 20px rgba(0,201,177,0.1); }
+  .lesson-card.j2:hover { border-color: var(--j2); box-shadow: 0 0 0 1px var(--j2-border), 0 4px 20px rgba(255,140,66,0.1); }
+  .lesson-card.done { opacity: 0.5; }
 
-  .lesson-header { display: flex; align-items: center; padding: 0.85rem 1rem; gap: 0.8rem; cursor: pointer; user-select: none; }
-  .lesson-card.j1 .lesson-header { background: var(--j1-light); }
-  .lesson-card.j2 .lesson-header { background: var(--j2-light); }
+  .lesson-header { display: flex; align-items: center; padding: 0.8rem 1rem; gap: 0.8rem; cursor: pointer; user-select: none; }
+  .lesson-card.j1 .lesson-header { background: var(--j1-bg); }
+  .lesson-card.j2 .lesson-header { background: var(--j2-bg); }
 
-  .level-badge { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 4px; white-space: nowrap; color: white; }
-  .lesson-card.j1 .level-badge { background: var(--j1); }
-  .lesson-card.j2 .level-badge { background: var(--j2-badge); }
-  .lesson-card.done .level-badge { background: var(--green) !important; }
+  .level-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 4px; white-space: nowrap; }
+  .lesson-card.j1 .level-badge { background: var(--j1); color: #0a1a18; }
+  .lesson-card.j2 .level-badge { background: var(--j2); color: #1a0e06; }
+  .lesson-card.done .level-badge { background: var(--green) !important; color: #0a1a10 !important; }
 
   .lesson-title-area { flex: 1; min-width: 0; }
-  .lesson-title { font-weight: 600; font-size: 0.9rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .lesson-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+  .lesson-title { font-weight: 600; font-size: 0.88rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lesson-meta { font-size: 0.72rem; color: var(--text3); margin-top: 0.1rem; }
 
   .lesson-chips { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-  .chip { font-size: 0.68rem; padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 500; }
-  .chip-hw { background: #fef3e2; color: #9a6310; }
-  .chip-followup { background: #fde8e8; color: #9b2020; }
-  .chip-done { background: var(--green-light); color: var(--green); }
-  .expand-icon { color: var(--muted); font-size: 1rem; transition: transform 0.2s; line-height: 1; flex-shrink: 0; }
+  .chip { font-size: 0.65rem; padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 600; }
+  .chip-hw { background: rgba(240,192,64,0.15); color: var(--gold); border: 1px solid rgba(240,192,64,0.3); }
+  .chip-followup { background: rgba(240,96,96,0.12); color: #f09090; border: 1px solid rgba(240,96,96,0.25); }
+  .chip-done { background: var(--green-bg); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
+
+  .expand-icon { color: var(--text3); font-size: 1rem; transition: transform 0.2s; line-height: 1; flex-shrink: 0; }
   .expanded .expand-icon { transform: rotate(180deg); }
 
   /* LESSON BODY */
-  .lesson-body { display: none; padding: 0 1rem 1rem; background: var(--white); }
+  .lesson-body { display: none; padding: 0 1rem 1rem; background: var(--surface); }
   .lesson-body.open { display: block; }
-  .lesson-body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 0.8rem; }
+  .lesson-body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 0.9rem; }
   @media (max-width: 500px) { .lesson-body-grid { grid-template-columns: 1fr; } }
-  .field-group { display: flex; flex-direction: column; gap: 0.25rem; }
+  .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
   .field-group.full { grid-column: 1 / -1; }
-  label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
-  input[type="text"], textarea, select { font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 0.45rem 0.65rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); width: 100%; transition: border-color 0.15s; }
-  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--ink); }
-  textarea { resize: vertical; min-height: 58px; }
 
+  label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); }
+
+  input[type="text"], textarea, select,
+  input[type="number"] {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    background: var(--surface2);
+    color: var(--text);
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--text3); }
+  textarea { resize: vertical; min-height: 62px; }
+  select option { background: var(--surface2); }
+
+  /* TIME BREAKDOWN */
   .time-breakdown { display: flex; flex-direction: column; gap: 0.35rem; }
   .time-row { display: flex; gap: 0.4rem; align-items: center; }
   .time-row input[type="text"] { flex: 1; }
-  .time-row input[type="number"] { width: 62px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 0.45rem 0.55rem; border: 1.5px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); text-align: right; }
-  .time-row input[type="number"]:focus { outline: none; border-color: var(--ink); }
-  .time-min { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
-  .btn-remove-row { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0; line-height: 1; }
-  .btn-remove-row:hover { color: var(--accent); }
-  .time-total { font-size: 0.75rem; color: var(--muted); text-align: right; margin-top: 0.15rem; }
-  .time-total.over { color: var(--accent); font-weight: 600; }
-  .btn-add-row { align-self: flex-start; background: none; border: 1.5px dashed var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; padding: 0.25rem 0.7rem; border-radius: 6px; cursor: pointer; margin-top: 0.2rem; transition: all 0.15s; }
-  .btn-add-row:hover { border-color: var(--ink); color: var(--ink); }
+  .time-row input[type="number"] { width: 65px; text-align: right; }
+  .time-min { font-size: 0.72rem; color: var(--text3); white-space: nowrap; }
+  .btn-remove-row { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 1rem; padding: 0; line-height: 1; transition: color 0.15s; }
+  .btn-remove-row:hover { color: var(--red); }
+  .time-total { font-size: 0.73rem; color: var(--text3); text-align: right; margin-top: 0.2rem; }
+  .time-total.over { color: var(--red); font-weight: 600; }
+  .btn-add-row { align-self: flex-start; background: none; border: 1px dashed var(--border2); color: var(--text3); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; padding: 0.28rem 0.7rem; border-radius: 6px; cursor: pointer; margin-top: 0.25rem; transition: all 0.15s; }
+  .btn-add-row:hover { border-color: var(--text2); color: var(--text2); }
 
-  .lesson-actions { display: flex; gap: 0.5rem; margin-top: 0.9rem; align-items: center; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 0.8rem; }
-  .btn-save { padding: 0.4rem 1rem; color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
-  .btn-save:hover { opacity: 0.8; }
-  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-  .lesson-card.j1 .btn-save { background: var(--j1); }
-  .lesson-card.j2 .btn-save { background: var(--j2-badge); }
-  .btn-done { padding: 0.4rem 0.9rem; background: var(--green); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; }
-  .btn-undone { padding: 0.4rem 0.9rem; background: transparent; color: var(--green); border: 1.5px solid var(--green); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; }
-  .btn-delete { margin-left: auto; padding: 0.4rem 0.7rem; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.15s; }
-  .btn-delete:hover { color: var(--accent); border-color: var(--accent); }
+  /* ACTIONS */
+  .lesson-actions { display: flex; gap: 0.5rem; margin-top: 1rem; align-items: center; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 0.9rem; }
+  .btn-save { padding: 0.4rem 1rem; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+  .btn-save:hover { opacity: 0.85; }
+  .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
+  .lesson-card.j1 .btn-save { background: var(--j1); color: #0a1a18; }
+  .lesson-card.j2 .btn-save { background: var(--j2); color: #1a0e06; }
+  .btn-done { padding: 0.4rem 0.9rem; background: var(--green-bg); color: var(--green); border: 1px solid rgba(76,175,125,0.35); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: background 0.15s; }
+  .btn-done:hover { background: rgba(76,175,125,0.2); }
+  .btn-undone { padding: 0.4rem 0.9rem; background: transparent; color: var(--text3); border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; }
+  .btn-delete { margin-left: auto; padding: 0.4rem 0.7rem; background: transparent; color: var(--text3); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.15s; }
+  .btn-delete:hover { color: var(--red); border-color: rgba(240,96,96,0.4); }
   .save-indicator { font-size: 0.75rem; color: var(--green); opacity: 0; transition: opacity 0.3s; }
   .save-indicator.show { opacity: 1; }
-  .unsaved-dot { display: none; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+  .unsaved-dot { display: none; width: 7px; height: 7px; background: var(--j2); border-radius: 50%; flex-shrink: 0; }
   .unsaved-dot.visible { display: inline-block; }
 
-  .empty-col { border: 2px dashed var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.82rem; }
+  .empty-col { border: 1px dashed var(--border); border-radius: 8px; padding: 1.2rem; text-align: center; color: var(--text3); font-size: 0.8rem; }
 
-  .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
-  .empty-state .big { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--ink); margin-bottom: 0.5rem; }
+  .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text3); }
+  .empty-state .big { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--text2); margin-bottom: 0.5rem; }
+  .empty-state p { font-size: 0.88rem; }
 
   /* MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,26,46,0.5); z-index: 200; align-items: center; justify-content: center; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,7,15,0.75); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
   .modal-overlay.open { display: flex; }
-  .modal { background: var(--white); border-radius: 12px; padding: 2rem; width: 90%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-  .modal h2 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1.1rem; }
-  .modal-fields { display: flex; flex-direction: column; gap: 0.8rem; }
-  .modal-actions { display: flex; gap: 0.6rem; margin-top: 1.4rem; justify-content: flex-end; }
-  .btn-cancel { padding: 0.5rem 1.1rem; background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; cursor: pointer; }
-  .btn-create { padding: 0.5rem 1.3rem; color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; }
-  .btn-create.j1 { background: var(--j1); }
-  .btn-create.j2 { background: var(--j2-badge); }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 2rem; width: 90%; max-width: 400px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+  .modal h2 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1.2rem; color: var(--text); }
+  .modal-fields { display: flex; flex-direction: column; gap: 0.9rem; }
+  .modal-actions { display: flex; gap: 0.6rem; margin-top: 1.5rem; justify-content: flex-end; }
+  .btn-cancel { padding: 0.5rem 1.1rem; background: transparent; color: var(--text3); border: 1px solid var(--border2); border-radius: 7px; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: color 0.15s; }
+  .btn-cancel:hover { color: var(--text); }
+  .btn-create { padding: 0.5rem 1.3rem; border: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+  .btn-create:hover { opacity: 0.85; }
+  .btn-create.j1 { background: var(--j1); color: #0a1a18; }
+  .btn-create.j2 { background: var(--j2); color: #1a0e06; }
 
-  .level-toggle { display: flex; gap: 0; border: 1.5px solid var(--border); border-radius: 7px; overflow: hidden; }
-  .level-opt { flex: 1; padding: 0.5rem; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; border: none; background: transparent; color: var(--muted); font-weight: 500; transition: all 0.15s; }
-  .level-opt.active.j1 { background: var(--j1); color: white; }
-  .level-opt.active.j2 { background: var(--j2-badge); color: white; }
+  .level-toggle { display: flex; border: 1px solid var(--border2); border-radius: 7px; overflow: hidden; }
+  .level-opt { flex: 1; padding: 0.5rem; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; border: none; background: transparent; color: var(--text3); font-weight: 600; transition: all 0.15s; }
+  .level-opt.active.j1 { background: var(--j1); color: #0a1a18; }
+  .level-opt.active.j2 { background: var(--j2); color: #1a0e06; }
 </style>
 </head>
 <body>
@@ -197,7 +244,7 @@
         <div class="pb-stat"><div class="num" id="j1Done">0</div><div class="lbl">Done</div></div>
         <div class="pb-stat"><div class="num" id="j1Total">0</div><div class="lbl">Total</div></div>
         <div class="pb-bar-wrap">
-          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted)"><span>Progress</span><span id="j1Pct">0%</span></div>
+          <div class="pb-pct-row"><span>Progress</span><span id="j1Pct">0%</span></div>
           <div class="pb-bar-bg"><div class="pb-bar-fill" id="j1Fill" style="width:0%"></div></div>
         </div>
       </div>
@@ -208,7 +255,7 @@
         <div class="pb-stat"><div class="num" id="j2Done">0</div><div class="lbl">Done</div></div>
         <div class="pb-stat"><div class="num" id="j2Total">0</div><div class="lbl">Total</div></div>
         <div class="pb-bar-wrap">
-          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted)"><span>Progress</span><span id="j2Pct">0%</span></div>
+          <div class="pb-pct-row"><span>Progress</span><span id="j2Pct">0%</span></div>
           <div class="pb-bar-bg"><div class="pb-bar-fill" id="j2Fill" style="width:0%"></div></div>
         </div>
       </div>
@@ -220,7 +267,7 @@
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalBox">
+  <div class="modal">
     <h2 id="modalTitle">New Lesson</h2>
     <div class="modal-fields">
       <div class="field-group">
@@ -232,7 +279,7 @@
       </div>
       <div class="field-group">
         <label>Week Number</label>
-        <input type="number" id="newWeek" min="1" max="20" value="1" style="font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.5rem 0.7rem;border:1.5px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);width:100%;">
+        <input type="number" id="newWeek" min="1" max="20" value="1">
       </div>
       <div class="field-group">
         <label>Topic / Title</label>
@@ -294,10 +341,7 @@ async function switchTerm(i) {
   await loadTerm(i);
 }
 
-function renderAll() {
-  renderProgress();
-  renderWeeks();
-}
+function renderAll() { renderProgress(); renderWeeks(); }
 
 function renderProgress() {
   const j1 = lessons.filter(l => l.level === 'JC1');
@@ -322,7 +366,6 @@ function renderWeeks() {
     container.innerHTML = '<div class="empty-state"><div class="big">No lessons yet</div><p>Click "+ Add JC1 Lesson" or "+ Add JC2 Lesson" to get started.</p></div>';
     return;
   }
-  // Get all unique week numbers
   const weeks = [...new Set(lessons.map(l => l.week_number))].sort((a,b) => a-b);
   container.innerHTML = '';
   weeks.forEach(wk => {
@@ -343,19 +386,16 @@ function renderWeeks() {
         </div>
       </div>`;
     container.appendChild(section);
-
-    const j1col = document.getElementById('j1-wk' + wk);
-    const j2col = document.getElementById('j2-wk' + wk);
-
+    const j1col = document.getElementById('j1-wk'+wk);
+    const j2col = document.getElementById('j2-wk'+wk);
     if (j1lessons.length) j1lessons.forEach(l => j1col.appendChild(buildCard(l)));
-    else j1col.innerHTML = '<div class="empty-col">No JC1 lesson</div>';
-
+    else j1col.innerHTML = '<div class="empty-col">No JC1 lesson this week</div>';
     if (j2lessons.length) j2lessons.forEach(l => j2col.appendChild(buildCard(l)));
-    else j2col.innerHTML = '<div class="empty-col">No JC2 lesson</div>';
+    else j2col.innerHTML = '<div class="empty-col">No JC2 lesson this week</div>';
   });
 }
 
-function getLessonIdx(id) { return lessons.findIndex(l => l.id === id); }
+function getLessonIdx(id) { return lessons.findIndex(l => String(l.id) === String(id)); }
 
 function buildCard(lesson) {
   const lvl = lesson.level === 'JC1' ? 'j1' : 'j2';
@@ -382,7 +422,7 @@ function buildCard(lesson) {
     <div class="lesson-header" onclick="toggleCard('${id}')">
       <span class="level-badge">${lesson.level}</span>
       <div class="lesson-title-area">
-        <div class="lesson-title">${esc(lesson.title) || '<em style="color:#aaa">Untitled</em>'}</div>
+        <div class="lesson-title">${esc(lesson.title) || '<em style="color:var(--text3)">Untitled</em>'}</div>
         <div class="lesson-meta">Week ${lesson.week_number}</div>
       </div>
       <div class="lesson-chips">${chips.join('')}</div>
@@ -443,29 +483,25 @@ function markUnsaved(id) {
 function collectFormData(id) {
   const card = document.getElementById('card-'+id);
   const timeRowEls = card.querySelectorAll('.time-row');
-  const time_rows = Array.from(timeRowEls).map(row => ({
-    activity: row.querySelector('input[type="text"]').value,
-    mins: row.querySelector('input[type="number"]').value
-  }));
   return {
     title: card.querySelector('.field-title').value,
     objectives: card.querySelector('.field-objectives').value,
     homework: card.querySelector('.field-homework').value,
     followup: card.querySelector('.field-followup').value,
     notes: card.querySelector('.field-notes').value,
-    time_rows
+    time_rows: Array.from(timeRowEls).map(row => ({
+      activity: row.querySelector('input[type="text"]').value,
+      mins: row.querySelector('input[type="number"]').value
+    }))
   };
 }
 
 async function saveCard(id) {
   const idx = getLessonIdx(id);
   if (idx === -1) return;
-  const formData = collectFormData(id);
-  Object.assign(lessons[idx], formData);
-
+  Object.assign(lessons[idx], collectFormData(id));
   const btn = document.getElementById('savebtn-'+id);
   if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
-
   const { error } = await sb.from('lesson_plans').update({
     title: lessons[idx].title || '',
     objectives: lessons[idx].objectives || '',
@@ -475,19 +511,15 @@ async function saveCard(id) {
     time_rows: lessons[idx].time_rows || [],
     done: lessons[idx].done || false
   }).eq('id', id);
-
   if (btn) { btn.textContent = 'Save'; btn.disabled = false; }
   if (error) { console.error(error); alert('Save failed. Please try again.'); return; }
-
-  // Flash saved
   const ind = document.getElementById('saveind-'+id);
   if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 2000); }
   const dot = document.getElementById('dot-'+id);
   if (dot) dot.classList.remove('visible');
-
-  // Update card header in place
+  // Update header title and chips without collapsing
   const titleEl = document.querySelector('#card-'+id+' .lesson-title');
-  if (titleEl) titleEl.innerHTML = esc(lessons[idx].title) || '<em style="color:#aaa">Untitled</em>';
+  if (titleEl) titleEl.innerHTML = esc(lessons[idx].title) || '<em style="color:var(--text3)">Untitled</em>';
   const chipsEl = document.querySelector('#card-'+id+' .lesson-chips');
   if (chipsEl) {
     const chips = [];
@@ -530,7 +562,7 @@ async function deleteLesson(id) {
   if (!confirm('Delete this lesson?')) return;
   const { error } = await sb.from('lesson_plans').delete().eq('id', id);
   if (error) { console.error(error); return; }
-  lessons = lessons.filter(l => l.id != id);
+  lessons = lessons.filter(l => String(l.id) !== String(id));
   renderAll();
 }
 
@@ -538,28 +570,24 @@ function addTimeRow(id) {
   const idx = getLessonIdx(id);
   if (idx === -1) return;
   const card = document.getElementById('card-'+id);
-  const timeRowEls = card.querySelectorAll('.time-row');
-  lessons[idx].time_rows = Array.from(timeRowEls).map(row => ({
+  lessons[idx].time_rows = Array.from(card.querySelectorAll('.time-row')).map(row => ({
     activity: row.querySelector('input[type="text"]').value,
     mins: row.querySelector('input[type="number"]').value
   }));
   lessons[idx].time_rows.push({ activity: '', mins: '' });
-  renderTimeRows(id);
-  markUnsaved(id);
+  renderTimeRows(id); markUnsaved(id);
 }
 
 function removeTimeRow(id, ri) {
   const idx = getLessonIdx(id);
   if (idx === -1) return;
   const card = document.getElementById('card-'+id);
-  const timeRowEls = card.querySelectorAll('.time-row');
-  lessons[idx].time_rows = Array.from(timeRowEls).map(row => ({
+  lessons[idx].time_rows = Array.from(card.querySelectorAll('.time-row')).map(row => ({
     activity: row.querySelector('input[type="text"]').value,
     mins: row.querySelector('input[type="number"]').value
   }));
   lessons[idx].time_rows.splice(ri, 1);
-  renderTimeRows(id);
-  markUnsaved(id);
+  renderTimeRows(id); markUnsaved(id);
 }
 
 function renderTimeRows(id) {
@@ -579,14 +607,12 @@ function renderTimeRows(id) {
 function updateTimeTotal(id) {
   const card = document.getElementById('card-'+id);
   if (!card) return;
-  const nums = card.querySelectorAll('.time-row input[type="number"]');
-  const total = Array.from(nums).reduce((s, el) => s + (parseInt(el.value)||0), 0);
+  const total = Array.from(card.querySelectorAll('.time-row input[type="number"]')).reduce((s, el) => s + (parseInt(el.value)||0), 0);
   const el = document.getElementById('timetotal-'+id);
   if (el) { el.textContent = total + ' / 120 min'; el.className = 'time-total' + (total > 120 ? ' over' : ''); }
   markUnsaved(id);
 }
 
-// MODAL
 function setModalLevel(lvl) {
   modalLevel = lvl;
   document.getElementById('optJ1').classList.toggle('active', lvl === 'JC1');
@@ -599,10 +625,8 @@ function openModal(lvl) {
   setModalLevel(modalLevel);
   document.getElementById('newTerm').value = currentTerm;
   document.getElementById('newTitle').value = '';
-  // Suggest next week number
-  const existingWeeks = lessons.filter(l => l.level === modalLevel).map(l => l.week_number);
-  const nextWk = existingWeeks.length ? Math.max(...existingWeeks) + 1 : 1;
-  document.getElementById('newWeek').value = nextWk;
+  const existing = lessons.filter(l => l.level === modalLevel).map(l => l.week_number);
+  document.getElementById('newWeek').value = existing.length ? Math.max(...existing) + 1 : 1;
   document.getElementById('modalOverlay').classList.add('open');
   setTimeout(() => document.getElementById('newTitle').focus(), 100);
 }
@@ -614,8 +638,7 @@ async function createLesson() {
   const termIdx = parseInt(document.getElementById('newTerm').value);
   const newLesson = {
     term_index: termIdx, term_label: TERMS[termIdx],
-    week_number, level: modalLevel,
-    title, lesson_date: null,
+    week_number, level: modalLevel, title, lesson_date: null,
     objectives: '', homework: '', followup: '', notes: '',
     time_rows: [
       { activity: 'Recap / Warm-up', mins: '10' },
