@@ -22,19 +22,16 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
 
-  /* LOADING */
   .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(245,242,235,0.75); z-index: 300; align-items: center; justify-content: center; gap: 0.6rem; font-size: 0.9rem; color: var(--muted); }
   .loading-overlay.visible { display: flex; }
   .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* HEADER */
   header { background: var(--ink); color: var(--paper); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
   .logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; }
   .logo span { color: var(--gold); }
   .header-meta { font-size: 0.78rem; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
 
-  /* LAYOUT */
   .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
   .term-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
   .term-bar h1 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; flex: 1; }
@@ -45,7 +42,6 @@
   .btn-add-lesson { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.2rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
   .btn-add-lesson:hover { opacity: 0.85; }
 
-  /* PROGRESS */
   .term-progress { background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
   .progress-stat { text-align: center; }
   .progress-stat .num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--ink); line-height: 1; }
@@ -55,7 +51,6 @@
   .progress-bar-bg { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.4s ease; }
 
-  /* LESSON CARDS */
   .lessons-list { display: flex; flex-direction: column; gap: 0.8rem; }
   .lesson-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; transition: box-shadow 0.15s; }
   .lesson-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
@@ -74,7 +69,6 @@
   .expand-icon { color: var(--muted); font-size: 1.2rem; transition: transform 0.2s; line-height: 1; }
   .expanded .expand-icon { transform: rotate(180deg); }
 
-  /* LESSON BODY */
   .lesson-body { display: none; padding: 0 1.2rem 1.2rem; border-top: 1px solid var(--border); }
   .lesson-body.open { display: block; }
   .lesson-body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
@@ -86,7 +80,6 @@
   input:focus, textarea:focus, select:focus { outline: none; border-color: var(--ink); }
   textarea { resize: vertical; min-height: 64px; }
 
-  /* TIME BREAKDOWN */
   .time-breakdown { display: flex; flex-direction: column; gap: 0.4rem; }
   .time-row { display: flex; gap: 0.5rem; align-items: center; }
   .time-row input[type="text"] { flex: 1; }
@@ -100,7 +93,6 @@
   .btn-add-row { align-self: flex-start; background: none; border: 1.5px dashed var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; margin-top: 0.2rem; transition: all 0.15s; }
   .btn-add-row:hover { border-color: var(--ink); color: var(--ink); }
 
-  /* ACTIONS */
   .lesson-actions { display: flex; gap: 0.6rem; margin-top: 1rem; align-items: center; flex-wrap: wrap; }
   .btn-done { padding: 0.4rem 1rem; background: var(--green); color: white; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: opacity 0.15s; }
   .btn-done:hover { opacity: 0.85; }
@@ -110,12 +102,10 @@
   .save-indicator { font-size: 0.75rem; color: var(--green); opacity: 0; transition: opacity 0.3s; }
   .save-indicator.show { opacity: 1; }
 
-  /* EMPTY */
   .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
   .empty-state .big { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--ink); margin-bottom: 0.5rem; }
   .empty-state p { font-size: 0.9rem; }
 
-  /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,26,46,0.5); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--white); border-radius: 12px; padding: 2rem; width: 90%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
@@ -158,7 +148,6 @@
   <div class="lessons-list" id="lessonsList"></div>
 </div>
 
-<!-- ADD LESSON MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h2>New Lesson</h2>
@@ -175,26 +164,21 @@
 </div>
 
 <script>
-// ─── SUPABASE (no auth — personal use only) ───────────────────────────────────
 const SUPABASE_URL = 'https://fvjqsohhitpnkvfirosc.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2anFzb2hoaXRwbmt2Zmlyb3NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwOTgwMTgsImV4cCI6MjA1OTY3NDAxOH0.4D8-Y69RFLHaSVdpOxktxrqDMhGVGb0DWQOmXPX5v9g';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_KEY = 'sb_publishable_xwEiareEvHfeAEs9RciKlA_TtlIyH-j';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
 const TERMS = ['Term 1 · 2025', 'Term 2 · 2025', 'Term 3 · 2025', 'Term 4 · 2025'];
 let currentTerm = 0;
 let lessons = [];
 let saveTimers = {};
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
 function showLoading(msg) { document.getElementById('loadingMsg').textContent = msg || 'Loading…'; document.getElementById('loadingOverlay').classList.add('visible'); }
 function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
 function esc(s) { if (!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function formatDate(d) { if (!d) return ''; return new Date(d+'T00:00:00').toLocaleDateString('en-SG', { weekday:'short', day:'numeric', month:'short', year:'numeric' }); }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
 window.onload = async () => {
-  // Build term tabs
   const tabs = document.getElementById('termTabs');
   TERMS.forEach((t, i) => {
     const btn = document.createElement('button');
@@ -203,28 +187,16 @@ window.onload = async () => {
     btn.onclick = () => switchTerm(i);
     tabs.appendChild(btn);
   });
-
-  // Build term select in modal
   const sel = document.getElementById('newTerm');
-  TERMS.forEach((t, i) => {
-    const o = document.createElement('option');
-    o.value = i; o.textContent = t;
-    sel.appendChild(o);
-  });
-
+  TERMS.forEach((t, i) => { const o = document.createElement('option'); o.value = i; o.textContent = t; sel.appendChild(o); });
   await loadTerm(0);
 };
 
-// ─── DATA ─────────────────────────────────────────────────────────────────────
 async function loadTerm(termIdx) {
   showLoading('Loading lessons…');
-  const { data, error } = await sb
-    .from('lesson_plans')
-    .select('*')
-    .eq('term_index', termIdx)
-    .order('week_number', { ascending: true });
+  const { data, error } = await sb.from('lesson_plans').select('*').eq('term_index', termIdx).order('week_number', { ascending: true });
   hideLoading();
-  if (error) { console.error(error); return; }
+  if (error) { console.error('Load error:', error); return; }
   lessons = data || [];
   renderAll();
 }
@@ -265,7 +237,6 @@ async function deleteLesson(idx) {
   renderAll();
 }
 
-// ─── NAVIGATION ───────────────────────────────────────────────────────────────
 async function switchTerm(i) {
   currentTerm = i;
   document.querySelectorAll('.term-tab').forEach((b, idx) => b.classList.toggle('active', idx === i));
@@ -273,7 +244,6 @@ async function switchTerm(i) {
   await loadTerm(i);
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────────
 function renderAll() { renderProgress(); renderLessons(); }
 
 function renderProgress() {
@@ -300,24 +270,18 @@ function buildCard(lesson, idx) {
   const card = document.createElement('div');
   card.className = 'lesson-card' + (lesson.done ? ' done' : '');
   card.id = 'card-' + idx;
-
   const chips = [];
   if (lesson.done) chips.push('<span class="chip chip-done">&#10003; Done</span>');
   if (lesson.homework) chips.push('<span class="chip chip-hw">HW</span>');
   if (lesson.followup) chips.push('<span class="chip chip-followup">Follow-up</span>');
-
   const timeRows = (lesson.time_rows || []).map((r, ri) => `
     <div class="time-row">
-      <input type="text" value="${esc(r.activity)}" placeholder="Activity"
-        onchange="updateTimeRow(${idx},${ri},'activity',this.value)">
-      <input type="number" value="${r.mins||''}" min="0" max="180" placeholder="0"
-        onchange="updateTimeRow(${idx},${ri},'mins',this.value)">
+      <input type="text" value="${esc(r.activity)}" placeholder="Activity" onchange="updateTimeRow(${idx},${ri},'activity',this.value)">
+      <input type="number" value="${r.mins||''}" min="0" max="180" placeholder="0" onchange="updateTimeRow(${idx},${ri},'mins',this.value)">
       <span class="time-min">min</span>
       <button class="btn-remove-row" onclick="removeTimeRow(${idx},${ri})">&#215;</button>
     </div>`).join('');
-
   const totalMins = (lesson.time_rows || []).reduce((s, r) => s + (parseInt(r.mins)||0), 0);
-
   card.innerHTML = `
     <div class="lesson-header" onclick="toggleCard(${idx})">
       <span class="week-badge">Wk ${lesson.week_number}</span>
@@ -332,18 +296,15 @@ function buildCard(lesson, idx) {
       <div class="lesson-body-grid">
         <div class="field-group">
           <label>Lesson Title / Topic</label>
-          <input type="text" value="${esc(lesson.title)}" placeholder="e.g. Electrochemistry"
-            oninput="queueSave(${idx},'title',this.value)">
+          <input type="text" value="${esc(lesson.title)}" placeholder="e.g. Electrochemistry" oninput="queueSave(${idx},'title',this.value)">
         </div>
         <div class="field-group">
           <label>Lesson Date</label>
-          <input type="date" value="${lesson.lesson_date||''}"
-            onchange="queueSave(${idx},'lesson_date',this.value)">
+          <input type="date" value="${lesson.lesson_date||''}" onchange="queueSave(${idx},'lesson_date',this.value)">
         </div>
         <div class="field-group full">
           <label>Learning Objectives</label>
-          <textarea placeholder="What should students be able to do by end of lesson?"
-            oninput="queueSave(${idx},'objectives',this.value)">${esc(lesson.objectives)}</textarea>
+          <textarea placeholder="What should students be able to do by end of lesson?" oninput="queueSave(${idx},'objectives',this.value)">${esc(lesson.objectives)}</textarea>
         </div>
         <div class="field-group full">
           <label>Time Breakdown</label>
@@ -353,18 +314,15 @@ function buildCard(lesson, idx) {
         </div>
         <div class="field-group">
           <label>Homework Assigned</label>
-          <textarea placeholder="e.g. Practice Questions Pg 45-47"
-            oninput="queueSave(${idx},'homework',this.value)">${esc(lesson.homework)}</textarea>
+          <textarea placeholder="e.g. Practice Questions Pg 45-47" oninput="queueSave(${idx},'homework',this.value)">${esc(lesson.homework)}</textarea>
         </div>
         <div class="field-group">
           <label>Follow Up Next Lesson</label>
-          <textarea placeholder="e.g. Recap Ksp before new topic"
-            oninput="queueSave(${idx},'followup',this.value)">${esc(lesson.followup)}</textarea>
+          <textarea placeholder="e.g. Recap Ksp before new topic" oninput="queueSave(${idx},'followup',this.value)">${esc(lesson.followup)}</textarea>
         </div>
         <div class="field-group full">
           <label>Notes / Reminders</label>
-          <textarea placeholder="Anything else to remember..."
-            oninput="queueSave(${idx},'notes',this.value)">${esc(lesson.notes)}</textarea>
+          <textarea placeholder="Anything else to remember..." oninput="queueSave(${idx},'notes',this.value)">${esc(lesson.notes)}</textarea>
         </div>
       </div>
       <div class="lesson-actions">
@@ -378,7 +336,6 @@ function buildCard(lesson, idx) {
   return card;
 }
 
-// ─── INTERACTIONS ─────────────────────────────────────────────────────────────
 function toggleCard(idx) {
   document.getElementById('body-'+idx).classList.toggle('open');
   document.getElementById('card-'+idx).classList.toggle('expanded');
@@ -430,16 +387,12 @@ async function removeTimeRow(idx, ri) {
 function updateTimeRow(idx, ri, field, val) {
   lessons[idx].time_rows[ri][field] = val;
   clearTimeout(saveTimers['tr'+idx]);
-  saveTimers['tr'+idx] = setTimeout(async () => {
-    await saveLesson(lessons[idx]);
-    flashSaved(idx);
-  }, 800);
+  saveTimers['tr'+idx] = setTimeout(async () => { await saveLesson(lessons[idx]); flashSaved(idx); }, 800);
   const total = lessons[idx].time_rows.reduce((s, r) => s + (parseInt(r.mins)||0), 0);
   const el = document.getElementById('timetotal-'+idx);
   if (el) { el.textContent = total + ' / 120 min'; el.className = 'time-total' + (total > 120 ? ' over' : ''); }
 }
 
-// ─── MODAL ────────────────────────────────────────────────────────────────────
 function openModal() {
   document.getElementById('newTerm').value = currentTerm;
   document.getElementById('newTitle').value = '';
@@ -453,15 +406,9 @@ async function createLesson() {
   const title = document.getElementById('newTitle').value.trim();
   const lesson_date = document.getElementById('newDate').value || null;
   const termIdx = parseInt(document.getElementById('newTerm').value);
-
-  const { count } = await sb
-    .from('lesson_plans')
-    .select('id', { count: 'exact', head: true })
-    .eq('term_index', termIdx);
-
+  const { count } = await sb.from('lesson_plans').select('id', { count: 'exact', head: true }).eq('term_index', termIdx);
   const newLesson = {
-    term_index: termIdx,
-    term_label: TERMS[termIdx],
+    term_index: termIdx, term_label: TERMS[termIdx],
     week_number: (count || 0) + 1,
     title, lesson_date,
     objectives: '', homework: '', followup: '', notes: '',
@@ -473,12 +420,10 @@ async function createLesson() {
     ],
     done: false
   };
-
   showLoading('Creating lesson…');
-  const saved = await saveLesson(newLesson);
+  await saveLesson(newLesson);
   hideLoading();
   closeModal();
-
   if (termIdx !== currentTerm) await switchTerm(termIdx);
   else await loadTerm(currentTerm);
 }
