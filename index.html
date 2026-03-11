@@ -10,26 +10,26 @@
   :root {
     /* Dark theme base */
     --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #222638;
-    --surface3: #2a2f45;
-    --border: #2e3350;
-    --border2: #3a4060;
+    --surface: #242840;
+    --surface2: #2c3150;
+    --surface3: #343a5a;
+    --border: #424868;
+    --border2: #505880;
     --text: #e8eaf0;
-    --text2: #9aa0b8;
+    --text2: #c8cde0;
     --text3: #6b7290;
 
     /* JC1: teal/cyan */
     --j1: #00c9b1;
     --j1-dim: #00796b;
-    --j1-bg: rgba(0,201,177,0.08);
-    --j1-border: rgba(0,201,177,0.25);
+    --j1-bg: rgba(0,201,177,0.2);
+    --j1-border: rgba(0,201,177,0.6);
 
     /* JC2: amber/orange */
     --j2: #ff8c42;
     --j2-dim: #b85c1a;
-    --j2-bg: rgba(255,140,66,0.08);
-    --j2-border: rgba(255,140,66,0.25);
+    --j2-bg: rgba(255,140,66,0.2);
+    --j2-border: rgba(255,140,66,0.6);
 
     --green: #4caf7d;
     --green-bg: rgba(76,175,125,0.1);
@@ -84,10 +84,10 @@
   .progress-box.j1 .pb-title { color: var(--j1); }
   .progress-box.j2 .pb-title { color: var(--j2); }
   .pb-stats { display: flex; gap: 1.5rem; align-items: center; }
-  .pb-stat .num { font-family: 'DM Serif Display', serif; font-size: 1.7rem; line-height: 1; color: var(--text); }
-  .pb-stat .lbl { font-size: 0.68rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .pb-stat .num { font-family: 'DM Serif Display', serif; font-size: 1.7rem; line-height: 1; color: #ffffff; }
+  .pb-stat .lbl { font-size: 0.68rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
   .pb-bar-wrap { flex: 1; }
-  .pb-pct-row { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text3); margin-bottom: 0.35rem; }
+  .pb-pct-row { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text2); margin-bottom: 0.35rem; }
   .pb-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
   .progress-box.j1 .pb-bar-fill { height: 100%; background: var(--j1); border-radius: 3px; transition: width 0.4s ease; }
   .progress-box.j2 .pb-bar-fill { height: 100%; background: var(--j2); border-radius: 3px; transition: width 0.4s ease; }
